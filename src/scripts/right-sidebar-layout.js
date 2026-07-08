@@ -85,7 +85,7 @@ function hideRightSidebar() {
 		// 调整主网格布局
 		const mainGrid = document.getElementById("main-grid");
 		if (mainGrid) {
-			mainGrid.style.gridTemplateColumns = "17.5rem 1fr";
+			mainGrid.style.gridTemplateColumns = "16rem 1fr";
 			mainGrid.setAttribute("data-layout-mode", "grid");
 		}
 	}

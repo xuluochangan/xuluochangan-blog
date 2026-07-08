@@ -432,7 +432,7 @@ export class SwupHooksManager {
 			return;
 		}
 
-		const isMobile = window.innerWidth < 1280;
+		const isMobile = window.innerWidth < 1152;
 		mainContentWrapper.classList.remove("mobile-main-no-banner", "no-banner-layout");
 		mainContentWrapper.style.removeProperty("min-height");
 

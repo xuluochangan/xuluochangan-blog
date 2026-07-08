@@ -159,7 +159,7 @@ const favicons: Favicon[] =
 				const isPortrait =
 					window.matchMedia &&
 					window.matchMedia("(orientation: portrait)").matches;
-				const isTabletLike = isTouch || window.innerWidth <= 1280;
+				const isTabletLike = isTouch || window.innerWidth <= 1152;
 				if (isTabletLike || isPortrait) {
 					document.documentElement.style.fontSize = "";
 					return;
@@ -170,8 +170,8 @@ const favicons: Favicon[] =
 				if (scale > 1) {
 					scale = 1;
 				}
-				if (scale < 0.85) {
-					scale = 0.85;
+				if (scale < 0.9) {
+					scale = 0.9;
 				}
 				document.documentElement.style.fontSize = `${scale * 100}%`;
 			}
