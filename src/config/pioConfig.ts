@@ -11,7 +11,7 @@ export const pioConfig: PioConfig = {
 	hiddenOnMobile: true, // 默认在移动设备上隐藏
 	hideAboutMenu: false, // 隐藏内置 About 菜单按钮
 	dialog: {
-		welcome: "Welcome to Mizuki Website!", // 欢迎词
+		welcome: "欢迎来到許洛長安的博客主页", // 欢迎词
 		touch: [
 			"What are you doing?",
 			"Stop touching me!",
@@ -21,6 +21,6 @@ export const pioConfig: PioConfig = {
 		home: "Click here to go back to homepage!", // 首页提示
 		skin: ["Want to see my new outfit?", "The new outfit looks great~"], // 换装提示
 		close: "QWQ See you next time~", // 关闭提示
-		link: "https://github.com/LyraVoid/Mizuki", // 关于链接
+		link: "https://github.com/xuluochangan/xuluochangan-blog", // 关于链接
 	},
 };
