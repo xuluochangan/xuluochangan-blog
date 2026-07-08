@@ -7,7 +7,7 @@ draft: false
 
 作为本站的第一篇文章，我想简单介绍一下这个网站的由来。
 
-首先要感谢 B 站 UP 主 [松坂有希](https://space.bilibili.com/701864046)。本站初版代码来自他发布的 Mizuki 主题。
+首先要感谢哔哩哔哩创作者 [松坂有希](https://space.bilibili.com/701864046)，账号 UID 为 701864046。本站初版代码来自他发布的 Mizuki 主题。
 
 ## 最初的想法
 
