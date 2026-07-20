@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /
+Allow: /$
+Allow: /posts/
+
+Sitemap: https://www.xuluochangan.com/sitemap-index.xml
