@@ -38,6 +38,7 @@ jobs:
       - name: Build site
         run: pnpm run build
         env:
+          PUBLIC_CLOUDBASE_ENV_ID: myblog-d7g9jscvec2c9af0d
           # 如果需要启用内容分离,取消以下注释并配置
           # ENABLE_CONTENT_SYNC: true
           # CONTENT_REPO_URL: ${{ secrets.CONTENT_REPO_URL }}

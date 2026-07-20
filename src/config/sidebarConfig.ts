@@ -29,6 +29,12 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			animationDelay: 50,
 		},
 		{
+			type: "treehole-entry",
+			position: "top",
+			class: "onload-animation",
+			animationDelay: 100,
+		},
+		{
 			// 组件类型：侧栏音乐组件
 			type: "music-sidebar",
 			position: "sticky",
@@ -99,9 +105,16 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 
 	// 侧栏组件布局配置
 	components: {
-		left: ["profile", "announcement", "tags", "card-toc"],
+		left: ["profile", "announcement", "treehole-entry", "tags", "card-toc"],
 		right: ["site-stats", "calendar", "categories", "music-sidebar"],
-		drawer: ["profile", "announcement", "music-sidebar", "categories", "tags"],
+		drawer: [
+			"profile",
+			"announcement",
+			"treehole-entry",
+			"music-sidebar",
+			"categories",
+			"tags",
+		],
 	},
 
 	// 默认动画配置
