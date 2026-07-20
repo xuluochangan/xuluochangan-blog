@@ -21,7 +21,6 @@ export const WIDGET_COMPONENT_MAP = {
 	pio: "../components/widget/Pio.astro",
 	"site-stats": "../components/widgets/site-stats/SiteStats.astro",
 	calendar: "../components/widgets/calendar/Calendar.astro",
-	"treehole-entry": "../components/widgets/treehole/TreeholeEntry.astro",
 	custom: null,
 } as const;
 

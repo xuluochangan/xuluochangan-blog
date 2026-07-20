@@ -1,5 +1,4 @@
 allowBuilds:
-  core-js-pure: false
   esbuild: true
   sharp: true
   ttf2woff2: true
