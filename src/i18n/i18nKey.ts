@@ -214,6 +214,7 @@ enum I18nKey {
 	passwordProtectedDescription = "passwordProtectedDescription",
 	postEncrypted = "postEncrypted",
 	postEncryptedMessage = "postEncryptedMessage",
+	postRestrictedMessage = "postRestrictedMessage",
 	passwordPlaceholder = "passwordPlaceholder",
 	passwordUnlock = "passwordUnlock",
 	passwordUnlocking = "passwordUnlocking",

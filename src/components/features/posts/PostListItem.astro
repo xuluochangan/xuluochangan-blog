@@ -33,6 +33,7 @@ const displayDate =
 
 <a
 	href={getPostUrlBySlug(post.id)}
+	data-restricted-post={post.data.restricted ? "true" : undefined}
 	class="group flex items-center gap-3 px-3 py-3 -mx-1 rounded-lg transition-all hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.98]"
 >
 	<div
@@ -46,6 +47,14 @@ const displayDate =
 			class="font-bold text-sm text-black/75 dark:text-white/75 truncate transition group-hover:text-(--primary)"
 		>
 			{post.data.title}
+			{
+				post.data.restricted && (
+					<Icon
+						name="material-symbols:lock-outline"
+						class="inline text-base align-middle ml-1"
+					/>
+				)
+			}
 		</div>
 		<div
 			class="flex items-center gap-1.5 text-xs text-black/30 dark:text-white/30 transition mt-1"

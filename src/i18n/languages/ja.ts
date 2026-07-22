@@ -301,6 +301,7 @@ export const ja: Translation = {
 		"保護されたコンテンツを表示するにはパスワードを入力してください。",
 	[Key.postEncrypted]: "暗号化済み",
 	[Key.postEncryptedMessage]: "この記事は暗号化されています",
+	[Key.postRestrictedMessage]: "この記事の閲覧にはアクセスキーが必要です",
 	[Key.passwordPlaceholder]: "パスワードを入力",
 	[Key.passwordUnlock]: "ロックを解除",
 	[Key.passwordUnlocking]: "ロックを解除中...",

@@ -12,7 +12,9 @@ interface Props {
 }
 
 const { type } = Astro.props;
-const posts = (await getSortedPosts()).filter((post) => !post.data.encrypted);
+const posts = (await getSortedPosts()).filter(
+	(post) => !post.data.encrypted && !post.data.restricted,
+);
 const recentPosts = posts.slice(0, 6);
 const getDescription = (post: (typeof recentPosts)[number]) =>
 	getPostPublicDescription(post.data);

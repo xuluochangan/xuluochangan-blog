@@ -27,6 +27,7 @@ const {
 	pinned,
 	encrypted,
 	password,
+	restricted,
 } = entry.data;
 
 const url = getPostUrl(entry);
@@ -35,7 +36,7 @@ const coverWidth = "28%";
 
 const { remarkPluginFrontmatter } = await render(entry);
 const homeContent = getPostHomeContent(
-	{ description, hideHomeContent, password },
+	{ description, hideHomeContent, password, restricted },
 	remarkPluginFrontmatter.excerpt,
 );
 ---
@@ -59,6 +60,7 @@ const homeContent = getPostHomeContent(
 	>
 		<a
 			href={url}
+			data-restricted-post={restricted ? "true" : undefined}
 			class="transition group w-full block font-bold mb-3 text-3xl text-90
         hover:text-[var(--primary)] dark:hover:text-[var(--primary)]
         active:text-[var(--title-active)] dark:active:text-[var(--title-active)]
@@ -76,7 +78,7 @@ const homeContent = getPostHomeContent(
 			}
 			{title}
 			{
-				encrypted && password && (
+				((encrypted && password) || restricted) && (
 					<Icon
 						name="material-symbols:lock-outline"
 						class="inline text-2xl align-middle -translate-y-px ml-2"
@@ -144,6 +146,7 @@ const homeContent = getPostHomeContent(
 		hasCover && (
 			<a
 				href={url}
+				data-restricted-post={restricted ? "true" : undefined}
 				aria-label={title}
 				class:list={[
 					"group",
@@ -174,6 +177,7 @@ const homeContent = getPostHomeContent(
 		!hasCover && (
 			<a
 				href={url}
+				data-restricted-post={restricted ? "true" : undefined}
 				aria-label={title}
 				class="!hidden md:!flex btn-regular w-[3.25rem]
          absolute right-3 top-3 bottom-3 rounded-xl bg-[var(--enter-btn-bg)]

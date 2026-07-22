@@ -1,0 +1,263 @@
+---
+import { createHash } from "node:crypto";
+
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import { getSortedPosts } from "@/utils/content-utils";
+import { url } from "@/utils/url-utils";
+
+import PasswordModal from "./PasswordModal.svelte";
+
+interface Props {
+	currentRestricted?: boolean;
+}
+
+const { currentRestricted = false } = Astro.props;
+const hasRestrictedPosts = (await getSortedPosts()).some(
+	(post) => post.data.restricted,
+);
+const sharedKey = (import.meta.env.RESTRICTED_POST_KEY || "").trim();
+
+if (hasRestrictedPosts && !sharedKey) {
+	throw new Error(
+		"Restricted posts exist, but RESTRICTED_POST_KEY is not configured.",
+	);
+}
+
+const keyContext = "mizuki-restricted-access:v1:";
+const expectedHash = sharedKey
+	? createHash("sha256")
+			.update(keyContext + sharedKey)
+			.digest("hex")
+	: "";
+const incorrectMessage = i18n(I18nKey.passwordIncorrect);
+---
+
+{
+	currentRestricted && (
+		<style is:global>
+			html:not(.restricted-page-unlocked) #swup-container {
+				visibility: hidden !important;
+			}
+		</style>
+	)
+}
+
+{
+	hasRestrictedPosts && (
+		<div id="restricted-post-gate" hidden aria-hidden="true">
+			<button
+				type="button"
+				class="restricted-gate-backdrop"
+				data-restricted-gate-close
+				aria-label="Close"
+			/>
+			<div class="restricted-gate-panel" role="dialog" aria-modal="true">
+				<button
+					type="button"
+					class="restricted-gate-close"
+					data-restricted-gate-close
+					aria-label="Close"
+				>
+					&times;
+				</button>
+				<PasswordModal client:load />
+			</div>
+		</div>
+	)
+}
+
+<style>
+	#restricted-post-gate[hidden] {
+		display: none;
+	}
+
+	#restricted-post-gate {
+		position: fixed;
+		inset: 0;
+		z-index: 100000;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1rem;
+	}
+
+	.restricted-gate-backdrop {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		border: 0;
+		background: rgb(15 23 42 / 45%);
+		backdrop-filter: blur(8px);
+	}
+
+	.restricted-gate-panel {
+		position: relative;
+		z-index: 1;
+		width: min(100%, 28rem);
+		border: 1px solid rgb(255 255 255 / 50%);
+		border-radius: var(--radius-large);
+		background: var(--card-bg);
+		box-shadow: 0 24px 70px rgb(15 23 42 / 28%);
+	}
+
+	.restricted-gate-close {
+		position: absolute;
+		top: 0.75rem;
+		right: 0.75rem;
+		z-index: 2;
+		width: 2rem;
+		height: 2rem;
+		border: 0;
+		border-radius: 0.5rem;
+		background: var(--btn-regular-bg);
+		color: var(--btn-content);
+		font-size: 1.25rem;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	:global(.restricted-gate-open) {
+		overflow: hidden;
+	}
+
+	:global(#restricted-post-gate .password-protection) {
+		padding: 2.5rem 1.5rem;
+	}
+
+	:global(#restricted-post-gate .password-container) {
+		padding: 0;
+	}
+</style>
+
+{
+	hasRestrictedPosts && (
+		<script
+			is:inline
+			define:vars={{
+				expectedHash,
+				keyContext,
+				incorrectMessage,
+				currentRestricted,
+				homePath: url("/"),
+			}}
+		>
+			(function() {
+				var storageKey = "mizuki-restricted-posts-unlocked";
+				var gate = document.getElementById("restricted-post-gate");
+				var pendingUrl = null;
+				var pageLocked = currentRestricted;
+
+				function isUnlocked() {
+					try {
+						return sessionStorage.getItem(storageKey) === expectedHash;
+					} catch (_) {
+						return false;
+					}
+				}
+
+				function showGate(targetUrl, locksCurrentPage) {
+					pendingUrl = targetUrl || null;
+					pageLocked = Boolean(locksCurrentPage);
+					gate.hidden = false;
+					gate.setAttribute("aria-hidden", "false");
+					document.documentElement.classList.add("restricted-gate-open");
+					document.dispatchEvent(new CustomEvent("password:clear-error"));
+					window.setTimeout(function() {
+						var input = gate.querySelector("input[type='password']");
+						if (input) input.focus();
+					}, 0);
+				}
+
+				function hideGate() {
+					gate.hidden = true;
+					gate.setAttribute("aria-hidden", "true");
+					document.documentElement.classList.remove("restricted-gate-open");
+				}
+
+				async function hashKey(value) {
+					var bytes = new TextEncoder().encode(keyContext + value.trim());
+					var digest = await crypto.subtle.digest("SHA-256", bytes);
+					return Array.from(new Uint8Array(digest))
+						.map(function(byte) {
+							return byte.toString(16).padStart(2, "0");
+						})
+						.join("");
+				}
+
+				document.addEventListener("password:unlock", async function(event) {
+					if (gate.hidden) return;
+					var password = event.detail && event.detail.password;
+					document.dispatchEvent(
+						new CustomEvent("password:loading", { detail: true }),
+					);
+					document.dispatchEvent(new CustomEvent("password:clear-error"));
+
+					try {
+						if (!password || (await hashKey(password)) !== expectedHash) {
+							document.dispatchEvent(
+								new CustomEvent("password:error", {
+									detail: incorrectMessage,
+								}),
+							);
+							return;
+						}
+
+						try {
+							sessionStorage.setItem(storageKey, expectedHash);
+						} catch (_) {}
+
+						document.documentElement.classList.add("restricted-page-unlocked");
+						if (pendingUrl) {
+							window.location.assign(pendingUrl);
+							return;
+						}
+						hideGate();
+					} finally {
+						document.dispatchEvent(
+							new CustomEvent("password:loading", { detail: false }),
+						);
+					}
+				});
+
+				document.addEventListener(
+					"click",
+					function(event) {
+						var target = event.target;
+						var anchor =
+							target && target.closest
+								? target.closest("a[data-restricted-post='true']")
+								: null;
+						if (!anchor || isUnlocked()) return;
+
+						event.preventDefault();
+						event.stopImmediatePropagation();
+						showGate(anchor.href, false);
+					},
+					true,
+				);
+
+				document.addEventListener("click", function(event) {
+					var target = event.target;
+					if (!target || !target.closest("[data-restricted-gate-close]")) {
+						return;
+					}
+					if (pageLocked) {
+						window.location.assign(homePath);
+						return;
+					}
+					hideGate();
+				});
+
+				if (currentRestricted) {
+					if (isUnlocked()) {
+						document.documentElement.classList.add("restricted-page-unlocked");
+					} else {
+						showGate(null, true);
+					}
+				}
+			})();
+		</script>
+	)
+}

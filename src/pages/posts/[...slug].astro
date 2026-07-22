@@ -217,6 +217,7 @@ const jsonLd = {
 	publishedDate={entry.data.published}
 	category={entry.data.category || undefined}
 	wordCount={remarkPluginFrontmatter.words}
+	restricted={entry.data.restricted}
 >
 	<script
 		is:inline
@@ -310,23 +311,25 @@ const jsonLd = {
 				)
 			}
 
-			{
-				isEncrypted ? (
-					<Encryptor
-						password={entry.data.password}
-						slug={entry.id}
-						hint={entry.data.passwordHint}
-					>
+			<div data-pagefind-ignore={entry.data.restricted ? "true" : undefined}>
+				{
+					isEncrypted ? (
+						<Encryptor
+							password={entry.data.password}
+							slug={entry.id}
+							hint={entry.data.passwordHint}
+						>
+							<Markdown class="mb-6 markdown-content onload-animation">
+								<Content />
+							</Markdown>
+						</Encryptor>
+					) : (
 						<Markdown class="mb-6 markdown-content onload-animation">
 							<Content />
 						</Markdown>
-					</Encryptor>
-				) : (
-					<Markdown class="mb-6 markdown-content onload-animation">
-						<Content />
-					</Markdown>
-				)
-			}
+					)
+				}
+			</div>
 
 			{
 				shareConfig.enable && (

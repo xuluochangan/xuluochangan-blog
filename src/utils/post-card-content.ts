@@ -5,6 +5,7 @@ export interface PostHomeContentData {
 	description?: string;
 	hideHomeContent?: boolean;
 	password?: string | null;
+	restricted?: boolean;
 }
 
 function hasPassword(password?: string | null): boolean {
@@ -12,7 +13,9 @@ function hasPassword(password?: string | null): boolean {
 }
 
 export function shouldHidePostHomeContent(data: PostHomeContentData): boolean {
-	return data.hideHomeContent ?? hasPassword(data.password);
+	return (
+		data.restricted || (data.hideHomeContent ?? hasPassword(data.password))
+	);
 }
 
 export function getPostHomeContent(
@@ -26,6 +29,10 @@ export function getPostPublicDescription(
 	data: PostHomeContentData,
 	fallback = "",
 ): string {
+	if (data.restricted) {
+		return i18n(I18nKey.postRestrictedMessage);
+	}
+
 	if (shouldHidePostHomeContent(data)) {
 		return i18n(I18nKey.postEncryptedMessage);
 	}

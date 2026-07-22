@@ -28,6 +28,9 @@ const postsCollection = defineCollection({
 		passwordHint: z.string().optional().default(""),
 		hideHomeContent: z.boolean().optional(),
 
+		/* Lightweight shared-key access gate */
+		restricted: z.boolean().optional().default(false),
+
 		/* Posts alias */
 		alias: z.string().optional(),
 
