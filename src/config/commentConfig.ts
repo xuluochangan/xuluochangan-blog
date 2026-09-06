@@ -6,7 +6,7 @@ export const commentConfig: CommentConfig = {
 	enable: true, // 启用评论功能。
 	system: "twikoo", // 评论系统选择: "twikoo" | "giscus"
 	twikoo: {
-		envId: "https://my-chi-ashy.vercel.app",
+		envId: "https://comment.xuluochangan.com",
 		lang: SITE_LANG,
 	},
 	giscus: {
