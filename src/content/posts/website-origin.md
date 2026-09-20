@@ -1,6 +1,8 @@
 ---
 title: 网站的由来
 published: 2026-07-08
+pinned: true
+priority: 0
 category: 关于本站
 draft: false
 ---
